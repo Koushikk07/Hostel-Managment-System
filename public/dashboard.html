@@ -1,183 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-<title>Student Dashboard</title>
-<link rel="icon" type="image/jpeg" href="logo.jpeg">
-<style>
-body { font-family: Arial, sans-serif; background: #f5f5f5; margin:0; padding:0; }
-header {
-  background: #007bff;
-  color: white;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-header h1 {
-  margin: 0;
-  font-size: 24px;
-  flex: 1;
-  text-align: center;
-}
-header a {
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  text-decoration: none;
-  background: white;
-  color: #007bff;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: bold;
-  transition: background 0.3s, color 0.3s;
-}
-header a:hover {
-  background: #0056b3;
-  color: white;
-}
-nav {
-  display: flex;
-  gap: 12px;
-  padding: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
-  background: #e0e0e0;
-}
-nav a,
-.dropdown-btn {
-  text-decoration: none;
-  padding: 12px 24px;
-  background: #007bff;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
-nav a:hover,
-.dropdown-btn:hover {
-  background: #0056b3;
-}
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #007bff;
-  min-width: 200px;
-  border-radius: 6px;
-  z-index: 1;
-  flex-direction: column;
-}
-.dropdown-content a {
-  display: block;
-  padding: 12px 16px;
-  margin: 2px 0;
-}
-.dropdown:hover .dropdown-content {
-  display: flex;
-}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>Student Dashboard</title>
+    <link rel="icon" type="image/jpeg" href="logo.jpeg" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        margin: 0;
+        padding: 0;
+      }
+      header {
+        background: #007bff;
+        color: white;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 24px;
+        flex: 1;
+        text-align: center;
+      }
+      header a {
+        position: absolute;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        text-decoration: none;
+        background: white;
+        color: #007bff;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: bold;
+        transition: background 0.3s, color 0.3s;
+      }
+      header a:hover {
+        background: #0056b3;
+        color: white;
+      }
+      nav {
+        display: flex;
+        gap: 12px;
+        padding: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+        background: #e0e0e0;
+      }
+      nav a,
+      .dropdown-btn {
+        text-decoration: none;
+        padding: 12px 24px;
+        background: #007bff;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      nav a:hover,
+      .dropdown-btn:hover {
+        background: #0056b3;
+      }
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #007bff;
+        min-width: 200px;
+        border-radius: 6px;
+        z-index: 1;
+        flex-direction: column;
+      }
+      .dropdown-content a {
+        display: block;
+        padding: 12px 16px;
+        margin: 2px 0;
+      }
+      .dropdown:hover .dropdown-content {
+        display: flex;
+      }
 
-h2 {
-  margin-bottom: 8px;
-  color: #007bff;
+      h2 {
+        margin-bottom: 8px;
+        color: #007bff;
+      }
+      .message {
+        font-weight: bold;
+        margin-top: 8px;
+        color: red;
+      }
+      #session-timer-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8d7da; /* Light Red/Warning Color */
+    color: #721c24; /* Dark Red Text */
+    text-align: center;
+    padding: 5px 0;
+    font-weight: bold;
+    z-index: 10000; /* Ensure it is above all other content */
+    display: none; /* Initially hidden */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-.message {
-  font-weight: bold;
-  margin-top: 8px;
-  color: red;
-}
+    </style>
+  </head>
+  <body><div id="session-timer-bar"></div>
+    <header>
+      <h1>Student Dashboard</h1>
+      <a href="/logout">Logout</a>
+    </header>
+
+    <nav>
+      <div class="dropdown">
+        <div class="dropdown-btn">Profile &#9662;</div>
+        <div class="dropdown-content">
+          <a href="profile.html">View Profile</a>
+          <a href="forgotpassword.html">Change Password</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <div class="dropdown-btn">Applications &#9662;</div>
+        <div class="dropdown-content">
+          <a href="hostelform.html">Apply for Hostel</a>
+          <a href="application-formstatus.html">Application Status</a>
+        </div>
+      </div>
+      <div class="dropdown">
+        <div class="dropdown-btn">Room &#9662;</div>
+        <div class="dropdown-content">
+          <a href="room-allocation.html">Room Allocation</a>
+        </div>
+      </div>
+      <a href="financial.html">Finance</a>
+      <a href="complaints.html">Complaints</a>
+      <a href="announcements.html">Announcements</a>
+    </nav>
+
+    <main>
+      <h2>Welcome, <span id="student-name">Loading...</span></h2>
+      <p>Roll No: <span id="student-roll"></span></p>
+      <p>Hostel: <span id="student-hostel">Not allocated</span></p>
+      <p>Room: <span id="student-room">Not allocated</span></p>
+    </main>
+
+    <script>
+
+      const SESSION_TIMEOUT_MS = 1000 * 60 * 15; // 15 minutes (Must match server.js maxAge)
+        const WARNING_TIME_MS = 1000 * 60 * 2;   // Show warning 2 minutes before timeout
+        
+        let timerInterval;
+        let expirationTime = Date.now() + SESSION_TIMEOUT_MS;
+
+        // Simple throttle function (prevents flooding the server with requests)
+        function throttle(func, delay) {
+            let lastCall = 0;
+            return function(...args) {
+                const now = Date.now();
+                if (now - lastCall > delay) {
+                    lastCall = now;
+                    func.apply(this, args);
+                }
+            };
+        }
+
+        async function resetSessionActivity() {
+            try {
+                // Hitting the server to keep the session alive
+                const response = await fetch('/keep-alive', { method: 'POST' });
+
+                if (response.ok) {
+                    // Update the client-side expiration time
+                    expirationTime = Date.now() + SESSION_TIMEOUT_MS;
+                    
+                    // Restart the timer to reflect the new expiration time
+                    startSessionTimer();
+                    
+                    // Hide the bar if we were in the warning zone
+                    document.getElementById('session-timer-bar').style.display = 'none';
+                }
+            } catch(e) {
+                console.error("Keep-alive failed, session may be invalid:", e);
+            }
+        }
+        
+        function startSessionTimer() {
+            const timerElement = document.getElementById('session-timer-bar');
+            if (!timerElement) return;
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                const remainingTimeMS = expirationTime - Date.now();
+                
+                if (remainingTimeMS <= 0) {
+                    clearInterval(timerInterval);
+                    timerElement.textContent = "Session Expired. Redirecting to Login...";
+                    // Force client logout and redirect with an error message
+                    window.location.href = "/logout?error=" + encodeURIComponent("Your session has expired due to inactivity.");
+                    return;
+                }
+
+                // Show the timer only when it enters the warning zone
+                if (remainingTimeMS <= WARNING_TIME_MS) {
+                    const remainingMinutes = Math.floor(remainingTimeMS / (1000 * 60));
+                    const remainingSeconds = Math.floor((remainingTimeMS % (1000 * 60)) / 1000);
+                    timerElement.style.display = 'block';
+                    timerElement.textContent = `⚠️ Session expires in ${remainingMinutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+                } else {
+                    timerElement.style.display = 'none';
+                }
+
+            }, 1000); // Check every second
+        }
+        
+        function setupActivityListeners() {
+            ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(eventType => {
+                document.addEventListener(eventType, throttle(resetSessionActivity, 60000)); // Throttle to once per minute
+            });
+        }
+
+        // Initialize the timer logic
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start the timer
+            startSessionTimer();
+            // Setup listeners to reset the timer on activity
+            setupActivityListeners();
+        });
+
+        // =========================================================
+        // === END OF SESSION TIMER SCRIPT ===
+        // =========================================================
+      // --- START: CRITICAL BACK BUTTON FIX ---
+      (function () {
+        // Listens for the 'pageshow' event, which fires even if the page is loaded from bfcache
+        window.addEventListener("pageshow", function (event) {
+          // event.persisted is true if the page was served from the bfcache (i.e., user hit the back button)
+          if (event.persisted) {
+            // If loaded from cache, immediately force a hard redirect to the login page
+            // The server will then run the checkLoggedIn middleware, find no session, and confirm logout.
+            window.location.href = "/";
+          }
+        });
+      })();
+      // --- END: CRITICAL BACK BUTTON FIX ---
+
+      async function loadStudentDetails() {
+        try {
+          // 1. Fetch data from the server API
+          const response = await fetch("/api/student/details", {
+            credentials: "same-origin",
+            
+          });
+          const data = await response.json();
+
+          if (data.success) {
+            // 2. Populate basic user info
+            document.getElementById("student-name").textContent = data.name;
+            document.getElementById("student-roll").textContent = data.roll;
+
+            // 3. Get the HTML elements for Hostel and Room
+            const hostelElement = document.getElementById("student-hostel");
+            const roomElement = document.getElementById("student-room");
+
+            // 4. Update the content (the "basic man" way)
+            // If data.hostel is a valid string, use it; otherwise, display 'Not allocated'.
+            hostelElement.textContent = data.hostel || "Not allocated";
+            roomElement.textContent = data.room || "Not allocated";
+
+            // OPTIONAL: Hide "Not allocated" for room if hostel is allocated but room isn't explicitly set
+            // if (data.hostel && !data.room) { roomElement.textContent = 'Room Pending Allocation'; }
+          } else {
+            console.error("Failed to load user data:", data.message);
+            document.getElementById("student-name").textContent =
+              "Error loading data";
+          }
+        } catch (error) {
+          console.error("Network or server error:", error);
+          document.getElementById("student-name").textContent = "Network Error";
+        }
+      }
 
 
-</style>
-</head>
-<body>
-<header>
 
-  
-  
-  <h1>Student Dashboard</h1>
-  <a href="/logout">Logout</a>
-</header>
-
-
-
-<nav>
-  <div class="dropdown">
-    <div class="dropdown-btn">Profile &#9662;</div>
-    <div class="dropdown-content">
-      <a href="profile.html">View Profile</a>
-      <a href="forgotpassword.html">Change Password</a>
-    </div>
-  </div>
-  <div class="dropdown">
-    <div class="dropdown-btn">Applications &#9662;</div>
-    <div class="dropdown-content">
-      <a href="hostelform.html">Apply for Hostel</a>
-      <a href="application-formstatus.html">Application Status</a>
-    </div>
-  </div>
-  <div class="dropdown">
-    <div class="dropdown-btn">Room &#9662;</div>
-    <div class="dropdown-content">
-      <a href="room-allocation.html">Room Allocation</a>
-    </div>
-  </div>
-  <a href="financial.html">Finance</a>
-  <a href="complaints.html">Complaints</a>
-  <a href="announcements.html">Announcements</a>
-  
-</nav>
-
-<main>
-<h2>Welcome, <span id="student-name">Loading...</span></h2>
-<p>Roll No: <span id="student-roll"></span></p>
-<p>Hostel: <span id="student-hostel">Not allocated</span></p> <p>Room: <span id="student-room">Not allocated</span></p>
-</main>
-
-<script>
-async function loadStudentDetails() {
-  try {
-    // 1. Fetch data from the server API
-    const response = await fetch('/api/student/details', { credentials: 'same-origin' }); 
-    const data = await response.json();
-
-    if (data.success) {
-      // 2. Populate basic user info
-      document.getElementById('student-name').textContent = data.name;
-      document.getElementById('student-roll').textContent = data.roll;
-      
-      // 3. Get the HTML elements for Hostel and Room
-      const hostelElement = document.getElementById('student-hostel');
-      const roomElement = document.getElementById('student-room');
-
-      // 4. Update the content (the "basic man" way)
-      // If data.hostel is a valid string, use it; otherwise, display 'Not allocated'.
-      hostelElement.textContent = data.hostel || 'Not allocated'; 
-      roomElement.textContent = data.room || 'Not allocated';
-      
-      // OPTIONAL: Hide "Not allocated" for room if hostel is allocated but room isn't explicitly set
-      // if (data.hostel && !data.room) { roomElement.textContent = 'Room Pending Allocation'; }
-      
-    } else {
-      console.error('Failed to load user data:', data.message);
-      document.getElementById('student-name').textContent = 'Error loading data';
-    }
-  } catch (error) {
-    console.error('Network or server error:', error);
-    document.getElementById('student-name').textContent = 'Network Error';
-  }
-}
-
-// Ensure this function runs when the page loads
-document.addEventListener('DOMContentLoaded', loadStudentDetails);
-</script>
-</body>
+      // Ensure this function runs when the page loads
+      document.addEventListener("DOMContentLoaded", loadStudentDetails);
+    </script>
+  </body>
 </html>
