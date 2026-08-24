@@ -157,6 +157,7 @@
       <p>Room: <span id="student-room">Not allocated</span></p>
     </main>
 
+<<<<<<< HEAD
     <script>
 
       const SESSION_TIMEOUT_MS = 1000 * 60 * 15; // 15 minutes (Must match server.js maxAge)
@@ -299,5 +300,157 @@
       // Ensure this function runs when the page loads
       document.addEventListener("DOMContentLoaded", loadStudentDetails);
     </script>
+=======
+    
+    <script>
+    // =========================================================
+    // === SESSION TIMER CONSTANTS & VARIABLES ===
+    // =========================================================
+    // CRITICAL: Must match the maxAge in server.js (15 * 60 * 1000)
+    const SESSION_TIMEOUT_MS = 1000 * 60 * 15; 
+    const WARNING_TIME_MS = 1000 * 60 * 2; 
+    
+    let timerInterval;
+    let expirationTime = Date.now() + SESSION_TIMEOUT_MS;
+    
+    // =========================================================
+    // === UTILITY FUNCTIONS (Throttle, Timer Logic) ===
+    // =========================================================
+    
+    function throttle(func, delay) {
+        let lastCall = 0;
+        return function(...args) {
+            const now = Date.now();
+            if (now - lastCall > delay) {
+                lastCall = now;
+                func.apply(this, args);
+            }
+        };
+    }
+
+    async function resetSessionActivity() {
+        try {
+            // Hitting a server endpoint to keep the session alive (extend expiration time)
+            const response = await fetch('/keep-alive', { method: 'POST' });
+
+            if (response.ok) {
+                expirationTime = Date.now() + SESSION_TIMEOUT_MS;
+                startSessionTimer(); // Restart the timer
+                document.getElementById('session-timer-bar').style.display = 'none';
+            }
+        } catch(e) {
+            console.error("Keep-alive failed, session may be invalid:", e);
+        }
+    }
+    
+    function startSessionTimer() {
+        // ... (Your existing startSessionTimer logic remains the same)
+        // Ensure this function is correctly defined below:
+        const timerElement = document.getElementById('session-timer-bar');
+        if (!timerElement) return;
+
+        if (timerInterval) clearInterval(timerInterval);
+
+        timerInterval = setInterval(() => {
+            const remainingTimeMS = expirationTime - Date.now();
+            
+            if (remainingTimeMS <= 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = "Session Expired. Redirecting to Login...";
+                // FORCE LOGOUT VIA CLIENT REDIRECT TO SERVER LOGOUT ROUTE
+                window.location.href = "/logout?error=" + encodeURIComponent("Your session has expired due to inactivity.");
+                return;
+            }
+
+            if (remainingTimeMS <= WARNING_TIME_MS) {
+                const remainingMinutes = Math.floor(remainingTimeMS / (1000 * 60));
+                const remainingSeconds = Math.floor((remainingTimeMS % (1000 * 60)) / 1000);
+                timerElement.style.display = 'block';
+                timerElement.textContent = `⚠️ Session expires in ${remainingMinutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            } else {
+                timerElement.style.display = 'none';
+            }
+
+        }, 1000); 
+    }
+    
+    function setupActivityListeners() {
+        ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(eventType => {
+            document.addEventListener(eventType, throttle(resetSessionActivity, 60000));
+        });
+    }
+
+    // =========================================================
+    // === CORE DATA/SESSION CHECK FUNCTION (UNIFIED LOGIC) ===
+    // =========================================================
+
+    async function checkSessionAndLoadData() {
+        try {
+            // CRITICAL: Fetch protected data. If session is dead, server returns non-200.
+            const response = await fetch("/api/student/details", {
+                credentials: "same-origin",
+            });
+            
+            // 1. HARD SESSION CHECK: If the server returns a non-200 status (e.g., 401/403)
+            if (!response.ok) { 
+                console.warn("Session expired on server. Redirecting to login.");
+                // Redirect to the root URL (which should be the login page)
+                window.location.href = "/"; 
+                return;
+            }
+            
+            // Session is valid, proceed with data loading
+            const data = await response.json();
+
+            if (data.success) {
+                // Your existing data loading logic:
+                document.getElementById("student-name").textContent = data.name;
+                document.getElementById("student-roll").textContent = data.roll;
+                
+                const hostelElement = document.getElementById("student-hostel");
+                const roomElement = document.getElementById("student-room");
+
+                hostelElement.textContent = data.hostel || "Not allocated";
+                roomElement.textContent = data.room || "Not allocated";
+            } else {
+                console.error("Failed to load user data:", data.message);
+            }
+        } catch (error) {
+            console.error("Network or server error:", error);
+            // In case of network error, also force a redirect as the session is unreliable
+            window.location.href = "/"; 
+        }
+    }
+
+
+    // =========================================================
+    // === INITIALIZATION AND BACK-BUTTON FIX ===
+    // =========================================================
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Start the data load/session check
+        checkSessionAndLoadData();
+        
+        // Start the client-side timer
+        startSessionTimer(); 
+        setupActivityListeners();
+    });
+
+    // CRITICAL FIX: The Back-Button Killer
+    window.addEventListener("pageshow", function (event) {
+        // If the page was restored from the browser cache (back button was hit)
+        if (event.persisted) {
+            console.log("Page restored from cache. Forcing server session re-check.");
+            // Call the same function that checks the session status against the server.
+            checkSessionAndLoadData();
+            
+            // Also reset the client-side timer, as bfcache restores old state
+            expirationTime = Date.now() + SESSION_TIMEOUT_MS;
+            startSessionTimer();
+        }
+    });
+
+</script>
+>>>>>>> 6434410479414f28b756b1e3bfe48cc209d11a23
   </body>
 </html>

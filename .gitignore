@@ -1,0 +1,7 @@
+node_modules/
+package-lock.json
+.env
+.env.example
+uploads/
+backup.js
+.DS_Store

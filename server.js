@@ -21,7 +21,11 @@ app.use(
     secret: process.env.SESSION_SECRET || "secret123",
     resave: false,
     saveUninitialized: false,
+<<<<<<< HEAD
     cookie: { maxAge: 15*60*1000 } // 15mins.
+=======
+    cookie: { maxAge: 15*60*1000 ,httpOnly: true} // 15mins.
+>>>>>>> 6434410479414f28b756b1e3bfe48cc209d11a23
   })
 );//abhishek
 
