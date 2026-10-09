@@ -1,56 +1,64 @@
-# Hostel Management System 🏨
+# Hostel Management System
 
-A robust, full-stack web application designed to streamline hostel administration, student registrations, and room allocations.
-
----
+A web application for managing hostel admissions, room allocation, fees and
+student complaints, with separate admin and student logins.
 
 ## Features
 
-- **User Authentication:** Secure login and registration system for students and admins.
-- **Room Management:** Real-time tracking of room availability and allocation.
-- **Automated Notifications:** Built-in middleware for handling system alerts.
-- **Database Backups:** Integrated script for periodic MySQL data redundancy.
-- **Responsive UI:** Optimized for both desktop and mobile views.
+**Admin**
+- Approve or reject hostel applications, with a rejection reason
+- Add rooms and track room status
+- Allocate rooms to students
+- Manage student records and fee billing
+- Post announcements and notices
+- Receive security alerts for repeated failed logins
+
+**Student**
+- Apply for hostel accommodation (with photo and certificate upload)
+- View allocated room and fee details
+- File complaints and track their status (Pending / In Progress / Resolved)
+
+## Security
+- Passwords hashed with bcrypt
+- Role-based access (admin vs student)
+- Account lockout for 15 minutes after 3 failed logins, with an admin alert
+- Secrets kept in environment variables
 
 ## Tech Stack
+Node.js, Express, MySQL, EJS, HTML, CSS, JavaScript
 
-- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
-- **Backend:** Node.js, Express.js
-- **Database:** MySQL
-- **Security:** Password hashing and environment-based configuration.
+## Database
+12 tables, including users, hostel_applications, rooms, room_allocations,
+student_billing and complaints. Schema is in `schema.sql`.
 
-## Project Structure
+## Setup
+1. Clone the repo and run `npm install`
+2. Copy `.env.example` to `.env` and fill in your values
+3. Create the database and run `schema.sql`
+4. Start the server with `npm start`
 
-├── middleware/ # Custom request filters (Auth, Logging)
-├── routes/ # API endpoints and page routing
-├── public/ # Static assets (Images, CSS, Client JS)
-├── notifications/ # Notification logic
-├── db.js # Database connection configuration
-├── server.js # Main entry point of the application
-└── hostel_db.sql # Database schema and initial data
+## 📸 Screenshots
 
-Installation & Setup
-Clone the repository:
+### 1. Admin Dashboard
+![Admin Dashboard](screenshots/admin-dashboard.png)
 
-Bash
-git clone [https://github.com/Koushikk07/Hostel_Managment_System.git](https://github.com/Koushikk07/Hostel_Managment_System.git)
-cd Hostel_Managment_System
-Install dependencies:
+### 2. Student Dashboard
+![Student Dashboard](screenshots/student-dashboard.png)
 
-npm install
-Database Configuration:
+### 3. Hostel Registration Form
+![Hostel Registration Form](screenshots/hostel-regform.jpg)
 
-Import hostel_db.sql into your local MySQL server.
+### 4. Room Allocation
+![Room Allocation](screenshots/room-allocation.png)
 
-Create a .env file based on .env.example.
+### 5. Billing
+![Billing](screenshots/billing.png)
 
-Update the credentials (DB_USER, DB_PASS, DB_NAME).
+### 6. Application
+![Application](screenshots/application.png)
 
-Run the application:
 
-npm start
-
-Security Note
-This project uses environment variables to manage sensitive data. Ensure your .env file is never committed to version control.
-
----
+## Future Improvements
+- React frontend
+- Automated tests
+- Cloud deployment
